@@ -1,0 +1,105 @@
+table dProdutos
+	lineageTag: 02d6e724-aa6e-4397-b9d6-2803c47a49e7
+
+	column SKU
+		dataType: string
+		lineageTag: 73a4ac07-0f33-431c-89a8-36fa5bce99f8
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nome Produto'
+		dataType: string
+		lineageTag: b9cc6449-5922-48d9-b379-9b0cb5bc79fb
+		summarizeBy: none
+		sourceColumn: Nome Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cor Produto'
+		dataType: string
+		lineageTag: 329e5faa-4324-447f-bf9b-3d55383cecc3
+		summarizeBy: none
+		sourceColumn: Cor Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marca
+		dataType: string
+		lineageTag: e704e247-7b1e-41bd-aa43-2881f2cbb8d9
+		summarizeBy: none
+		sourceColumn: Marca
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preço Unitario'
+		dataType: double
+		lineageTag: 52ed6606-c592-42b8-afc9-c9225a255263
+		summarizeBy: sum
+		sourceColumn: Preço Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Custo Unitario'
+		dataType: double
+		lineageTag: e78b46eb-4419-41fd-bb19-7e1d4433d26b
+		summarizeBy: sum
+		sourceColumn: Custo Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Tipo do Produto'
+		dataType: string
+		lineageTag: 735233f7-353d-49ff-bdb3-5fdbc8f0a971
+		summarizeBy: none
+		sourceColumn: Tipo do Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ticket do Produto'
+		dataType: string
+		lineageTag: 9367e678-3816-4f23-b5e6-b739ae8054b6
+		summarizeBy: none
+		sourceColumn: Ticket do Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Imagem
+		dataType: string
+		lineageTag: e5af0b10-38da-4bcf-b749-29eb5bf4dc34
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Imagem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dProdutos-732ecc1a-3105-47c8-996a-9b66ac12d390 = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\João Pedro\OneDrive\Documentos\Base de dados BI Hashtag\Cadastro Produtos.xlsx"), null, true),
+				    Plan1_Sheet = Fonte{[Item="Produtos",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"SKU", type text}, {"Produto", type text}, {"Marca", type text}, {"Tipo do Produto", type text}, {"Preço Unitario", Int64.Type}, {"Custo Unitario", Int64.Type}, {"Observação", type text}}),
+				    #"Coluna dividida" = Table.TransformColumns(#"Tipo Alterado", {{"Preço Unitario", each _ / 100, type number}}),
+				    #"Coluna dividida1" = Table.TransformColumns(#"Coluna dividida", {{"Custo Unitario", each _ / 100, type number}}),
+				    #"Dividir Coluna por Delimitador" = Table.SplitColumn(#"Coluna dividida1", "Produto", Splitter.SplitTextByEachDelimiter({" - "}, QuoteStyle.Csv, true), {"Produto.1", "Produto.2"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Dividir Coluna por Delimitador",{{"Produto.1", type text}, {"Produto.2", type text}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado1",{{"Produto.1", "Nome Produto"}, {"Produto.2", "Cor Produto"}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Colunas Renomeadas",{"Observação"}),
+				    #"Coluna Condicional Adicionada" = Table.AddColumn(#"Colunas Removidas", "Ticket do Produto", each if [Preço Unitario] <= 500 then "Ticket Baixo" else if [Preço Unitario] <= 2000 then "Ticket Médio" else "Ticket Alto"),
+				    #"Tipo Alterado2" = Table.TransformColumnTypes(#"Coluna Condicional Adicionada",{{"Ticket do Produto", type text}}),
+				    #"Consultas Mescladas" = Table.NestedJoin(#"Tipo Alterado2", {"Tipo do Produto"}, Imagens, {"Tipo do Produto"}, "Imagens", JoinKind.LeftOuter),
+				    #"Imagens Expandido" = Table.ExpandTableColumn(#"Consultas Mescladas", "Imagens", {"Imagem"}, {"Imagem"})
+				in
+				    #"Imagens Expandido"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegação
+
