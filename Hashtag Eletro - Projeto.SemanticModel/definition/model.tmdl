@@ -1,0 +1,40 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transformar Arquivo de Bases de Dados'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transformar Arquivo de Bases de Dados\Consultas Auxiliares'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation PBIDesktopVersion = 2.146.1254.0 (25.08)+791a7518fadc83da883d79322a2658aff57c8db3
+
+annotation PBI_QueryOrder = ["dClientes","dProdutos","dLojas","dLocalidades","fVendas","Parâmetro1","Transformar o Arquivo de Exemplo","Arquivo de Amostra","Transformar Arquivo","Caminho","fDevoluções","Medidas","Imagens"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dClientes
+ref table DateTableTemplate_0c184832-04ce-4ad8-b82e-4f16851dd803
+ref table LocalDateTable_6e30c11f-65e0-4c44-99d0-adad57233e71
+ref table dProdutos
+ref table dLojas
+ref table fVendas
+ref table fDevoluções
+ref table Medidas
+ref table dCalendario
+ref table LocalDateTable_8d496b3b-761a-4d12-af06-ca3724ac887a
+ref table LocalDateTable_9f332867-e634-43b9-9450-99db4792c543
+ref table Parâmetro
+ref table Imagens
+
+ref cultureInfo pt-BR
+
