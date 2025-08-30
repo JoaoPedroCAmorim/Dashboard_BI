@@ -1,0 +1,68 @@
+table fDevoluções
+	lineageTag: 5ba58698-8b93-4a0a-830d-ecddc45beabf
+
+	column 'Data Devolução'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 95577c0a-e785-4fdf-b01d-9a720908c8f3
+		summarizeBy: none
+		sourceColumn: Data Devolução
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'ID Loja'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8ced46ea-84b8-4b85-bebb-a3ec4634d803
+		summarizeBy: none
+		sourceColumn: ID Loja
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		isHidden
+		lineageTag: 29aa3c59-68c8-4bf5-a80b-ae9130b28dff
+		summarizeBy: none
+		sourceColumn: SKU
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Qtd Devolvida'
+		dataType: int64
+		formatString: 0
+		lineageTag: eae19bb4-daf7-4d90-a485-a998d6b7f803
+		summarizeBy: sum
+		sourceColumn: Qtd Devolvida
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Motivo Devolução'
+		dataType: string
+		lineageTag: b2702ebb-cfc1-49c5-a52e-ff78a38c1604
+		summarizeBy: none
+		sourceColumn: Motivo Devolução
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fDevoluções-3745dc9b-bcb3-48d6-b06f-b517bb41db73 = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\João Pedro\OneDrive\Documentos\Base de dados BI Hashtag\Base Devoluções.xlsx"), null, true),
+				    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Data Devolução", type date}, {"ID Loja", Int64.Type}, {"SKU", type text}, {"Qtd Devolvida", Int64.Type}, {"Motivo Devolução", type text}}),
+				    #"Linhas em Branco Removidas" = Table.SelectRows(#"Tipo Alterado", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null})))
+				in
+				    #"Linhas em Branco Removidas"
+
+	annotation PBI_ResultType = Table
+
