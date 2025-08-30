@@ -1,0 +1,35 @@
+table Imagens
+	lineageTag: 0ce125d6-2fc8-4498-8376-890b7259fee9
+
+	column 'Tipo do Produto'
+		dataType: string
+		lineageTag: aa322cb7-32e8-4144-a6dc-f8335c53a44c
+		summarizeBy: none
+		sourceColumn: Tipo do Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Imagem
+		dataType: string
+		lineageTag: 070bb0c4-f6c0-47da-a5ed-3f9aa4cf2ce6
+		summarizeBy: none
+		sourceColumn: Imagem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Imagens = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\João Pedro\OneDrive\Documentos\Imagens.xlsx"), null, true),
+				    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Plan1_Sheet,{{"Column1", type text}, {"Column2", type text}}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Tipo Alterado", [PromoteAllScalars=true]),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Tipo do Produto", type text}, {"Imagem", type text}})
+				in
+				    #"Tipo Alterado1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
