@@ -1,0 +1,183 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 168.33333333333334,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "dClientes",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 314.62857142857143,
+            "y": 0
+          },
+          "nodeIndex": "dProdutos",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 587.35893174422529,
+            "y": 0
+          },
+          "nodeIndex": "dLojas",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 390.36645612128768
+          },
+          "nodeIndex": "fVendas",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 748.9,
+            "y": 391.42857142857144
+          },
+          "nodeIndex": "fDevoluções",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1303.7,
+            "y": 0
+          },
+          "nodeIndex": "Medidas",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 928.32843335183452,
+            "y": 0
+          },
+          "nodeIndex": "dCalendario",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1587.7,
+            "y": 231.18322806064384
+          },
+          "nodeIndex": "Parâmetro",
+          "nodeLineageTag": "e9fcec6b-3b12-4e92-852a-4eef87dbefe8",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1192.7,
+            "y": 306.43322806064384
+          },
+          "nodeIndex": "Imagens",
+          "nodeLineageTag": "0ce125d6-2fc8-4498-8376-890b7259fee9",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 60,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    },
+    {
+      "ordinal": 1,
+      "scrollPosition": {
+        "x": 0,
+        "y": 53.333332061767578
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 30.181333705522206,
+            "y": 269.46132812268911
+          },
+          "nodeIndex": "fVendas",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 325,
+            "y": 36
+          },
+          "nodeIndex": "dProdutos",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 700.99660127186166,
+            "y": 322.8291508849436
+          },
+          "nodeIndex": "fDevoluções",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        }
+      ],
+      "name": "Layout 1",
+      "zoomValue": 84.235113759624483,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}
