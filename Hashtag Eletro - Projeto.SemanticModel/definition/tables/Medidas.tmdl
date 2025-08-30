@@ -1,0 +1,267 @@
+table Medidas
+	lineageTag: a533dc85-0de4-438d-95ea-c13916d03c31
+
+	measure '% Devoluções' = [Total Devoluções]/[Total Vendas]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 980fc923-8ddb-4804-a220-b3f79e89e888
+
+		changedProperty = FormatString
+
+	measure '% Margem de Lucro' = [Lucro Total]/[Faturamento Total]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: aacf29e1-470a-4d14-9390-737d24ddc8da
+
+		changedProperty = FormatString
+
+	measure 'Total Vendas' = SUM(fVendas[Qtd Vendida])
+		formatString: #,0
+		lineageTag: 19dfe954-03b5-4dbd-843c-f9bb791b45c4
+
+	measure 'Total Devoluções' = SUM('fDevoluções'[Qtd Devolvida])
+		formatString: 0
+		lineageTag: 6db03fec-1d3a-47a5-ae53-25c05dc59935
+
+	measure 'Vendas Online' =
+			CALCULATE(
+			    [Total Vendas],
+			    dLojas[Tipo]="Online"
+			)
+		formatString: 0
+		lineageTag: a71aad5b-15af-485c-8c1f-656dc5a8b814
+
+	measure '% Vendas Online' = DIVIDE([Vendas Online], [Total Vendas], "Sem vendas")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6d8cb69a-1e2e-4fa1-b8bf-abc00ea9901d
+
+	measure 'Faturamento Total' =
+			SUMX(
+			    fVendas,
+			    fVendas[Qtd Vendida]*RELATED(dProdutos[Preço Unitario])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: bffab740-129c-49f8-a8d1-84e545f9be46
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-US"}
+
+	measure 'Lucro Total' =
+			SUMX(
+			    fVendas,
+			    (fVendas[Qtd Vendida]*RELATED(dProdutos[Preço Unitario]))*0.9-
+			    fVendas[Qtd Vendida]*RELATED(dProdutos[Custo Unitario])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 9cae63ea-9ba2-4674-812f-2b8343be2908
+
+		annotation PBI_FormatHint = {"currencyCulture":"es-US"}
+
+	measure 'Prejuízo Devoluções' =
+			SUMX(
+			    'fDevoluções',
+			    'fDevoluções'[Qtd Devolvida]*RELATED(dProdutos[Preço Unitario])
+			)
+		lineageTag: e4657cfa-ccf9-4182-a37a-be70e8bccd55
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento YTD' =
+			CALCULATE([Faturamento Total],
+			DATESYTD(dCalendario[Datas]))
+		lineageTag: fae6477c-e001-42b2-b042-58d41bb50bea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento YTD 2' = TOTALYTD([Faturamento Total], dCalendario[Datas])
+		lineageTag: 8f540881-c6af-4422-ab3e-749c6b0dc40b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento MTD' = TOTALMTD([Faturamento Total],dCalendario[Datas])
+		lineageTag: dbed9940-9503-4913-8e26-325dcd7ad05f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento QTD' = TOTALQTD([Faturamento Total], dCalendario[Datas])
+		lineageTag: c0c15495-014f-42b1-a433-6a08a8eff85d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Faturamento Mês Anterior' =
+			CALCULATE(
+			    [Faturamento Total],
+			    DATEADD(dCalendario[Datas],-1,MONTH)
+			)
+		lineageTag: 434f169c-d259-42fe-88d8-0c5bdf1bcceb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Crescimento MoM' = DIVIDE([Faturamento Total]-[Faturamento Mês Anterior],[Faturamento Mês Anterior],"Sem Histórico")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 336ac4c5-a4fb-4dc5-98a6-34790beeaaf8
+
+	measure '% Crescimento Faturamento YoY' = ```
+			
+			var vFat_ano_anterior = CALCULATE(
+			    [Faturamento Total],
+			    DATEADD(dCalendario[Datas],-12,MONTH)
+			)
+			var vCrescimento = DIVIDE([Faturamento Total]-vFat_ano_anterior,vFat_ano_anterior)
+			return 
+			IF(HASONEVALUE(dCalendario[Ano])&&vCrescimento<>BLANK(),
+			vCrescimento,
+			"N/A"
+			) // var - variavel, vFat_ano_anterior - nome da variavel, facilitador de formulas //
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 9fa14c3b-c76f-40b5-8f6b-b236777e57cc
+
+	measure 'Faturamento YTD LY' =
+			CALCULATE(
+			    [Faturamento YTD],
+			    DATEADD(dCalendario[Datas],-12, MONTH)
+			)
+		lineageTag: 9df08ddc-4e62-4549-a5ae-d9779b325458
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Crescimento YoY YTD' =
+			
+			IF(HASONEVALUE(dCalendario[Inicio do Mês]),
+			DIVIDE(
+			    [Faturamento YTD]-[Faturamento YTD LY],
+			    [Faturamento YTD LY]
+			))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 55a9ad7d-fa93-4fa7-ac5b-c86527fd8a9e
+
+	measure '% Crescimento Lucro YoY' = ```
+			
+			var vLucro_ano_ant = CALCULATE(
+			    [Lucro Total],
+			    DATEADD(dCalendario[Datas],-12,MONTH)
+			)
+			var vLucro = DIVIDE([Lucro Total]-vLucro_ano_ant,vLucro_ano_ant)
+			return 
+			IF(HASONEVALUE(dCalendario[Ano])&&vLucro<>BLANK(),
+			vLucro,
+			"N/A"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 96573adb-c55e-430a-bf9b-7e8488e554a1
+
+	measure '% Crescimento Vendas YoY' = ```
+			
+			var vVendas_Ano_Ant = CALCULATE(
+			    [Total Vendas],
+			    DATEADD(dCalendario[Datas],-12,MONTH)
+			)
+			var vVendas = DIVIDE([Total Vendas]-vVendas_Ano_Ant,vVendas_Ano_Ant)
+			return 
+			IF(HASONEVALUE(dCalendario[Ano])&&vVendas<>BLANK(),
+			vVendas,
+			"N/A"
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 80bded06-8211-4a1a-9c19-3af762b25147
+
+	measure 'Faturamento LY' =
+			
+			var vFatLy = CALCULATE(
+			    [Faturamento Total],
+			    DATEADD(dCalendario[Datas],-12,MONTH)
+			)
+			RETURN
+			IF(HASONEVALUE(dCalendario[Ano]),
+			vFatLy
+			)
+		lineageTag: 6cc17e60-cafa-4bc8-a7b4-3a0a963c7249
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Produto mais vendido' =
+			
+			CALCULATE(MAX(dProdutos[Nome Produto]),
+			TOPN(
+			    1,
+			    ALL(dProdutos[Nome Produto]),
+			    [Total Vendas])
+			)
+		lineageTag: 7cb0dab9-1b57-48e2-8dbe-989aebd16c2f
+
+	measure 'Quantidade Prod. vendidos (Top 1)' =
+			CALCULATE(
+			    [Total Vendas],
+			    TOPN(
+			        1,
+			        ALL(dProdutos[Nome Produto]),
+			        [Total Vendas]
+			    )
+			)
+		formatString: 0
+		lineageTag: 34ce9fac-4fcf-4e39-bb6c-0735857cb2e2
+
+	measure '% das vendas (Top 1)' = [Quantidade Prod. vendidos (Top 1)]/[Total Vendas]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b862d4c9-0321-402d-830b-496e6f5295bc
+
+	measure 'Top 1 lojas' =
+			CALCULATE(
+			    MAX(dLojas[Nome da Loja]),
+			    TOPN(
+			        1,
+			        ALL(dLojas[Nome da Loja]),
+			        [Total Vendas]
+			    )
+			)
+		lineageTag: 979625f5-0b0f-4fe2-af70-3f4bdeb7c23f
+
+	measure 'Quantidade vendida lojas' =
+			CALCULATE(
+			    [Total Vendas],
+			    TOPN(
+			        1,
+			        ALL(dLojas[Nome da Loja]),
+			        [Total Vendas]
+			    )
+			)
+		formatString: 0
+		lineageTag: f1ed24ae-557d-42ab-b44e-33217b430e2d
+
+	measure '% Vendas Lojas' = [Quantidade vendida lojas]/[Total Vendas]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: caa96fd0-bcc8-42c8-9ed0-5183fd796489
+
+	measure 'Faturamento perdido' =
+			
+			SUMX(
+			    'fDevoluções',
+			    'fDevoluções'[Qtd Devolvida]*RELATED(dProdutos[Preço Unitario])
+			)
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 189d5901-9162-47d6-99c0-182899c43fb3
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure '% Fat. Perdido' = [Faturamento perdido]/[Faturamento Total]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 82aa76ab-b07c-46ad-af52-c87d39874ccb
+
+	measure 'Mês selecionado' = SELECTEDVALUE(dCalendario[Inicio do Mês].[Mês],"Selecione um mês")
+		lineageTag: 277d3b9c-66b1-4d19-a861-21d28849bcaf
+
+	measure 'Categoria selecionada' = SELECTEDVALUE(dProdutos[Tipo do Produto])
+		lineageTag: 8981d6b0-40a0-4e3d-899f-243601a9508e
+
+	partition Medidas-59795af3-f3ee-4c62-9e1a-411fa4e0e0c4 = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"Coluna 1", type text}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Coluna 1"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_ResultType = Table
+
