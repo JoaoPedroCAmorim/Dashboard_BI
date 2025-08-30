@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Hashtag Eletro - Projeto"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3909e085-d4e4-4d43-b652-37c7b9eb14bb"
+  }
+}
