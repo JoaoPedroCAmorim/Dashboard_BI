@@ -18,15 +18,14 @@ O dashboard é dividido em três painéis principais para uma análise completa:
 
 ## Como Visualizar
 
-Segue as imagens explictivos do dashboard:
+### 1. Tela de Abertura: Capa de apresentação, o botão "Ir para o Dashboard" facilita a navegação entre as paginas.
 <img width="1457" height="819" alt="image" src="https://github.com/user-attachments/assets/f38a6f20-1e55-46ad-971a-e92c484f1b99" />
-1. Capa de apresentação, o botão "Ir para o Dashboard" facilita a navegação entre as paginas.
+### 2. Painel de Vendas Gerais: No segundo painel, mostra as informações de faturamento, lucro, total de vendas e margem de lucro. Além disso, foram utilizados gráficos de coluna e pizza para facilitar a visualização dos dados.
 <img width="1462" height="784" alt="image" src="https://github.com/user-attachments/assets/adb0d2e7-b1db-4d81-b4c4-528a3c25cb31" /> 
-2. No segundo painel, mostra as informações de faturamento, lucro, total de vendas e margem de lucro. Além disso, foram utilizados gráficos de coluna e pizza para facilitar a visualização dos dados.
+### 3. Painel de Indicadores de Desempenho: No terceiro painel, mostra a marca e produtos por marca mais vendidos, além de fornecedor um texto explicativo com o produto e loja que obtiveram mais vendas no período solicitado.
 <img width="1456" height="801" alt="image" src="https://github.com/user-attachments/assets/227caf1a-b342-4003-b83f-15d33764ac86" />
-3. No terceiro painel, mostra a marca e produtos por marca mais vendidos, além de fornecedor um texto explicativo com o produto e loja que obtiveram mais vendas no período solicitado.
+### 4. Painel de Devoluções: No último painel, é muito parecido com o primeiro porém traz as informações de produtos devolvidos. A principal diferença é um mapa que mostra os países e continentes que tiveram maior devolução de produtos.
 <img width="1458" height="798" alt="image" src="https://github.com/user-attachments/assets/30216c40-18e7-44ad-8643-f5d47cfa6c20" />
-4. No último painel, é muito parecido com o primeiro porém traz as informações de produtos devolvidos. A principal diferença é um mapa que mostra os países e continentes que tiveram maior devolução de produtos.
 
 ## Estrutura do Projeto
 
