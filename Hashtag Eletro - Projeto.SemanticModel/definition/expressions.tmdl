@@ -1,0 +1,66 @@
+expression dLocalidades =
+		let
+		    Fonte = Excel.Workbook(File.Contents("C:\Users\João Pedro\OneDrive\Documentos\Base de dados BI Hashtag\Cadastro Localidades.xlsx"), null, true),
+		    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true]),
+		    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"ID Localidade", Int64.Type}, {"País", type text}, {"Continente", type text}}),
+		    #"Valor Substituído" = Table.ReplaceValue(#"Tipo Alterado","Oceania","Australia",Replacer.ReplaceText,{"Continente"})
+		in
+		    #"Valor Substituído"
+	lineageTag: d4055b72-3424-436e-8107-d729b7f310f1
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
+expression Parâmetro1 = #"Arquivo de Amostra" meta [IsParameterQuery=true, BinaryIdentifier=#"Arquivo de Amostra", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 1ebbebc6-571f-4e94-8c28-53f515d210a7
+	queryGroup: 'Transformar Arquivo de Bases de Dados\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar o Arquivo de Exemplo' =
+		let
+		    Fonte = Excel.Workbook(Parâmetro1, null, true),
+		    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true])
+		in
+		    #"Cabeçalhos Promovidos"
+	lineageTag: b10987c4-2c24-4c35-938a-b31140986d7e
+	queryGroup: 'Transformar Arquivo de Bases de Dados'
+
+	annotation PBI_ResultType = Table
+
+expression 'Arquivo de Amostra' =
+		let
+		    Fonte = Folder.Files(Caminho),
+		    #"Linhas Filtradas" = Table.SelectRows(Fonte, each Text.StartsWith([Name], "Base Vendas")),
+		    Navegação1 = #"Linhas Filtradas"{0}[Content]
+		in
+		    Navegação1
+	lineageTag: e9a03908-2b72-48b2-a50d-511fb1f54d2c
+	queryGroup: 'Transformar Arquivo de Bases de Dados\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transformar Arquivo' =
+		let
+		    Fonte = (Parâmetro1 as binary) => let
+		    Fonte = Excel.Workbook(Parâmetro1, null, true),
+		    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true])
+		in
+		    #"Cabeçalhos Promovidos"
+		in
+		    Fonte
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transformar o Arquivo de Exemplo""}" ]
+	lineageTag: f55ed25f-de88-4836-aafd-a194019f9155
+	queryGroup: 'Transformar Arquivo de Bases de Dados\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Function
+
+expression Caminho = "C:\Users\João Pedro\OneDrive\Documentos\Base de dados BI Hashtag\Vendas" meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true]
+	lineageTag: c7e93d9a-b414-4ed0-ae17-52c1255bbbe2
+
+	annotation PBI_ResultType = Text
+
